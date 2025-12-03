@@ -1,0 +1,14 @@
+# Go build files
+bin/
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+
+# IDE
+.vscode/
+.idea/
+
+# Go cache
+go.work
