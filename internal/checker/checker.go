@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/AyushDubey63/go-monitor/internal/db"
 	"github.com/AyushDubey63/go-monitor/internal/models"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -38,7 +39,12 @@ func RunHealthCheck(service models.MonitorService,pool *pgxpool.Pool){
 	if err!=nil{
 		status = "down"
 	}
-
+	serviceHealthlog := models.ServiceHealthLog{
+		ServiceID: service.ID,
+		Status: status,
+		LatencyMs: la,
+	}
+	db.InsertHealthLog(pool,)
 
 
 }

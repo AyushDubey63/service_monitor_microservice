@@ -35,3 +35,13 @@ func GetActiveServices(pool *pgxpool.Pool)([]models.MonitorService,error){
 	}
 	return services,nil
 }
+
+func InsertHealthLog(pool *pgxpool.Pool,serviceHealthlog models.ServiceHealthLog)(error) {
+	_, err := pool.Exec(context.Background(),`
+		INSERT INTO service_health_log (service_id,status,latency_ms,error) VALUES ($1,$2,$3,$4)
+	`,serviceHealthlog.ServiceID,serviceHealthlog.Status,serviceHealthlog.LatencyMs,serviceHealthlog.Error)
+	if err!=nil{
+		{return err}
+	}
+	{return nil}
+}
