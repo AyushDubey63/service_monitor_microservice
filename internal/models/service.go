@@ -23,4 +23,5 @@ type MonitorService struct {
 	TenantID        uuid.UUID `db:"tenant_id" json:"tenant_id"`
 	CreatedAt       time.Time `db:"created_at" json:"created_at"`
 	UpdatedAt       time.Time `db:"updated_at" json:"updated_at"`
+	CheckRule       *ServiceCheckRule
 }

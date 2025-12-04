@@ -25,6 +25,8 @@ func GetActiveServices(pool *pgxpool.Pool)([]models.MonitorService,error){
 			&s.TimeoutMS,
 			&s.RetryCount,
 			&s.IntervalSeconds,
+			&s.CheckRule.ExpectedCode,
+			&s.CheckRule.ExpectedBody,
 		)
 		if err!= nil{
 			return  nil,err
