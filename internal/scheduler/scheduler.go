@@ -5,6 +5,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/AyushDubey63/go-monitor/internal/checker"
 	"github.com/AyushDubey63/go-monitor/internal/db"
 	"github.com/AyushDubey63/go-monitor/internal/models"
 )
@@ -30,8 +31,7 @@ func StartScheduler() {
 
             for {
                 <-ticker.C
-                // call your health check function
-                // runHealthCheck(service, pool)
+                checker.RunHealthCheck(service,pool)
             }
         }(svc)
     }

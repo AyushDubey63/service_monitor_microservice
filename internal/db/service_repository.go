@@ -41,7 +41,17 @@ func InsertHealthLog(pool *pgxpool.Pool,serviceHealthlog models.ServiceHealthLog
 		INSERT INTO service_health_log (service_id,status,latency_ms,error) VALUES ($1,$2,$3,$4)
 	`,serviceHealthlog.ServiceID,serviceHealthlog.Status,serviceHealthlog.LatencyMs,serviceHealthlog.Error)
 	if err!=nil{
-		{return err}
+		return err
 	}
-	{return nil}
+	return nil
+}
+
+func InsertIncidentLog(pool *pgxpool.Pool,incidentLog models.Incident)(error){
+	_, err := pool.Exec(context.Background(),`
+		INSERT INTO incidents (service_id,started_at,error_message,trigger_status_code,trigger_latency_ms) VALUES ($1,$2,$3,$4,$5)
+	`,incidentLog.ServiceID,incidentLog.StartedAt,incidentLog.ErrorMessage,incidentLog.TriggerStatusCode,incidentLog.TriggerLatencyMS)
+	if err != nil{
+		return  err
+	}
+	return nil
 }
