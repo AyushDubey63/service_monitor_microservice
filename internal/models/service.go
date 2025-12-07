@@ -15,8 +15,9 @@ type MonitorService struct {
 	Environment     string    `db:"environment" json:"environment"`
 	IntervalSeconds int       `db:"interval_seconds" json:"interval_seconds"`
 	RetryCount      int       `db:"retry_count" json:"retry_count"`
-	TimeoutMS  int       `db:"timeout_ms" json:"timeout_ms"`
+	TimeoutMS  		int       `db:"timeout_ms" json:"timeout_ms"`
 	IsPublic        bool      `db:"is_public" json:"is_public"`
+	Status         	string `db:"status" json:"status"`
 	AlertEnabled    bool      `db:"alert_enabled" json:"alert_enabled"`
 	AlertChannel    string    `db:"alert_channel" json:"alert_channel"`
 	CreatedBy       int       `db:"created_by" json:"created_by"`
