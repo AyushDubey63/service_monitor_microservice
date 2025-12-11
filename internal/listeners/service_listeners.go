@@ -9,10 +9,12 @@ import (
 	"github.com/AyushDubey63/go-monitor/internal/models"
 	"github.com/AyushDubey63/go-monitor/internal/scheduler"
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func ListenToChannel(ctx context.Context, dbUrl, channel string) {
-    conn, err := pgx.Connect(ctx, dbUrl)
+func ListenToChannel(ctx context.Context, pool *pgxpool.Pool, channel string) {
+    cfg := pool.Config().ConnConfig
+    conn, err := pgx.ConnectConfig(ctx, cfg)
 
     if err != nil {
         log.Printf("Error acquiring connection for channel %v: %v\n", channel, err)

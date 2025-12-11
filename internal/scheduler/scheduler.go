@@ -27,13 +27,7 @@ var S = &Scheduler{
     tickers: make(map[string]*ServiceTicker),
 }
 
-func StartScheduler() {
-    ctx := context.Background()
-
-    pool, err := db.ConnectDB(ctx)
-    if err != nil {
-        log.Fatalf("Failed to connect to database: %v", err)
-    }
+func StartScheduler(pool *pgxpool.Pool) {
     
     S.DB = pool
 
