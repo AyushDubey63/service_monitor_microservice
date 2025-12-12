@@ -62,7 +62,9 @@ func (s *Scheduler) AddOrUpdateService(service models.MonitorService,){
         for {
             select{
             case <-ticker.C:
-                checker.RunHealthCheck(svc,S.DB)
+                checker.RunHealthCheck(svc,S.DB,func ()  {
+                    S.RemoveService(svc.ID.String())
+                })
             case <-ctx.Done():
                 return
             }

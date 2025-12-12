@@ -49,13 +49,14 @@ func checkService(service models.MonitorService) (bool, int, time.Duration, erro
 }
 
 
-func RunHealthCheck(service models.MonitorService,pool *pgxpool.Pool){
+func RunHealthCheck(service models.MonitorService,pool *pgxpool.Pool,removeService func()){
 	_,statusCode,latency,err := checkService(service)
 	status := "up" 
 
 	if err!=nil{
 		status = "down"
 		incidentmanager.HandleIncident(pool,service,statusCode,latency, err)
+        removeService()
 	}
 	serviceHealthlog := models.ServiceHealthLog{
 		ServiceID: service.ID,
