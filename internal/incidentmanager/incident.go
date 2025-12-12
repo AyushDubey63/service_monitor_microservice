@@ -1,35 +1,24 @@
 package incidentmanager
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"time"
 
 	"github.com/AyushDubey63/go-monitor/internal/db"
 	"github.com/AyushDubey63/go-monitor/internal/models"
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func reportIncident(incident models.Incident){
-	
-	body  := map[string]any{
-		"service_id" :incident.ServiceID,
-		"status" : incident.Status,
-		"error_message" : incident.ErrorMessage,
-		"trigger_status_code" : incident.TriggerStatusCode,
-		"trigger_latency_ms" : incident.TriggerLatencyMS,
-		"started_at" : incident.StartedAt,
-	} 
-	jsonData, err := json.Marshal(body)
-	if err != nil {
-		fmt.Printf("Error generating json body: %v",err)
-	}
+func reportIncident(id uuid.UUID){
+
 	var serverUrl = os.Getenv("SERVER_URL")
-	serverUrl += `/api/v1/incident/report-incident`
-	req, err := http.NewRequest("POST",serverUrl,bytes.NewBuffer(jsonData))
+	serverUrl += `/api/v1/incident/report-incident/`
+	serverUrl += id.String()
+	req, err := http.NewRequest(http.MethodPost,serverUrl,nil)
 	if err != nil {
 		fmt.Printf("Error while creating http request: %v",err)
 	}
@@ -52,6 +41,9 @@ func HandleIncident(pool *pgxpool.Pool,service models.MonitorService,statusCode 
 			TriggerStatusCode: statusCode,
 			TriggerLatencyMS: int(latency),
 		}
-	db.InsertIncidentLog(pool,incidentLog)
-	reportIncident(incidentLog)
+	id,err := db.InsertIncidentLog(pool,incidentLog)
+	if err != nil{
+		log.Printf("Error while inserting log in db %s",err)
+	}
+	reportIncident(id)
 }

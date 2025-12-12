@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/AyushDubey63/go-monitor/internal/models"
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -61,12 +62,13 @@ func InsertHealthLog(pool *pgxpool.Pool, serviceHealthlog models.ServiceHealthLo
 	return nil
 }
 
-func InsertIncidentLog(pool *pgxpool.Pool, incidentLog models.Incident) error {
-	_, err := pool.Exec(context.Background(), `
+func InsertIncidentLog(pool *pgxpool.Pool, incidentLog models.Incident) (uuid.UUID,error) {
+	var id uuid.UUID
+	 err := pool.QueryRow(context.Background(), `
 		INSERT INTO incidents (service_id,started_at,error_message,trigger_status_code,trigger_latency_ms) VALUES ($1,$2,$3,$4,$5)
-	`, incidentLog.ServiceID, incidentLog.StartedAt, incidentLog.ErrorMessage, incidentLog.TriggerStatusCode, incidentLog.TriggerLatencyMS)
+	`, incidentLog.ServiceID, incidentLog.StartedAt, incidentLog.ErrorMessage, incidentLog.TriggerStatusCode, incidentLog.TriggerLatencyMS).Scan(&id)
 	if err != nil {
-		return err
+		return uuid.Nil,err
 	}
-	return nil
+	return id,err
 }
